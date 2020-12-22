@@ -17,8 +17,10 @@ let light = undefined
 
 let createLand = () => {
     let geometry = new THREE.PlaneGeometry(500, 100)
-    let material = new THREE.MeshStandardMaterial({
-        color: 0x000000,
+    let material = new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.3,
         side: THREE.DoubleSide
     })
     let mesh = new THREE.Mesh(geometry, material)
@@ -88,8 +90,8 @@ let init = () => {
 
     //cam first person
     cameraFirst = new THREE.PerspectiveCamera(fov, aspect)
-    cameraFirst.position.set(0, 1, 0)
-    cameraFirst.lookAt(0, 0, 0)
+    cameraFirst.position.set(0, 34, 100)
+    cameraFirst.lookAt(-2, 1, 2)
         //cam init 
     currentCamera = cameraFirst
 
@@ -104,8 +106,8 @@ let init = () => {
     control = new OrbitControls(currentCamera, renderer.domElement)
 
     //limit camera movement up-down
-    // control.minPolarAngle = -Math.PI;
-    // control.maxPolarAngle = 1.5;
+    control.minPolarAngle = -Math.PI;
+    control.maxPolarAngle = 1.5;
     control.enablePan = false
     control.enableZoom = true
     control.update();
@@ -120,6 +122,7 @@ let animation = () => {
     requestAnimationFrame(animation)
     renderer.render(scene, currentCamera)
     control.update();
+    console.log(currentCamera)
 }
 
 //onload
