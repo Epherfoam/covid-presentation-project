@@ -26,7 +26,7 @@ let createLand = () => {
     let mesh = new THREE.Mesh(geometry, material)
     mesh.rotation.x = Math.PI / 2
     mesh.rotation.y = 0
-    mesh.rotation.z = 0
+    mesh.rotation.z = Math.PI / 2
     mesh.position.y = 0
     scene.add(mesh)
     return mesh
