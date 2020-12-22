@@ -117,18 +117,39 @@ let init = () => {
     light = createLampLight()
 }
 
+let keyListener = event => {
+    let keyCode = event.keyCode
+    if (keyCode == 87) {
+        currentCamera.position.z -= 3
+    } else if (keyCode == 83) {
+        currentCamera.position.z += 3
+    } //else
+    // if (keyCode == 17) {
+    //     if (currentCamera == cameraThird) currentCamera = cameraFirst
+    //     else currentCamera = cameraThird
+    // }
+
+    //kalo pake currcam, rotation ga bakal guna 
+    control.target = currentCamera.position
+}
+
+let addListener = () => {
+    document.addEventListener("keydown", keyListener)
+}
+
 //animation
 let animation = () => {
     requestAnimationFrame(animation)
     renderer.render(scene, currentCamera)
     control.update();
-    console.log(currentCamera)
+    //console.log(currentCamera)
 }
 
 //onload
 window.onload = () => {
     init()
     animation()
+    addListener()
 }
 
 //on resize
