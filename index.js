@@ -11,6 +11,9 @@ let control = undefined
 let land = undefined
 let sky = undefined
 let light = undefined
+let navigator = undefined
+let text = undefined
+
 
 
 //create class
@@ -30,6 +33,41 @@ let createLand = () => {
     mesh.position.y = 0
     scene.add(mesh)
     return mesh
+}
+
+let createText = (thisString, position) => {
+
+    let loader = new THREE.FontLoader()
+    loader.load('./assets/fonts/helvetiker_regular.typeface.json', font => {
+        let textGeometry = new THREE.TextGeometry(thisString, {
+            font: font,
+            size: 6,
+            height: 2
+        })
+        textGeometry.center()
+        text = new THREE.Mesh(textGeometry, new THREE.MeshBasicMaterial({
+            color: 0xffffff
+        }))
+        text.rotation.y = 3.125;
+        text.position.y = 10;
+        text.position.z = position;
+        scene.add(text)
+        return text;
+    })
+
+}
+
+let createNavigator = () => {
+    let geometry = new THREE.SphereGeometry(3, 10, 10)
+    let material = new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        transparent: true,
+        opacity: 1,
+    })
+    let mesh = new THREE.Mesh(geometry, material)
+    mesh.position.set(0, 10, 0)
+    scene.add(mesh)
+    return mesh;
 }
 
 let createCube = () => {
@@ -90,8 +128,8 @@ let init = () => {
 
     //cam first person
     cameraFirst = new THREE.PerspectiveCamera(fov, aspect)
-    cameraFirst.position.set(0, 34, 100)
-    cameraFirst.lookAt(-2, 1, 2)
+    cameraFirst.position.set(0, 34, -100)
+    cameraFirst.lookAt(2, 1, -2)
         //cam init 
     currentCamera = cameraFirst
 
@@ -115,22 +153,47 @@ let init = () => {
     land = createLand()
     sky = createCube()
     light = createLampLight()
+    navigator = createNavigator()
+    text = createText("Pencegahan Covid-19", 60)
 }
 
 let keyListener = event => {
     let keyCode = event.keyCode
-    if (keyCode == 87) {
-        currentCamera.position.z -= 3
-    } else if (keyCode == 83) {
+    if (keyCode == 87) { //w
+        navigator.position.z += 3
         currentCamera.position.z += 3
-    } //else
-    // if (keyCode == 17) {
-    //     if (currentCamera == cameraThird) currentCamera = cameraFirst
-    //     else currentCamera = cameraThird
-    // }
+
+    } else if (keyCode == 83) { //s
+        if (navigator.position.z < -180) {
+            navigator.position.z += 0
+            currentCamera.position.z += 0
+        } else {
+            navigator.position.z -= 3
+            currentCamera.position.z -= 3
+        }
+
+    } else if (keyCode == 65) { //a
+        if (navigator.position.x > 48) {
+            navigator.position.x += 0
+            currentCamera.position.x += 0
+        } else {
+            navigator.position.x += 3
+            currentCamera.position.x += 3
+        }
+
+    } else if (keyCode == 68) { //d
+        if (navigator.position.x < -48) {
+            navigator.position.x += 0
+            currentCamera.position.x += 0
+        } else {
+            navigator.position.x -= 3
+            currentCamera.position.x -= 3
+        }
+    }
 
     //kalo pake currcam, rotation ga bakal guna 
-    control.target = currentCamera.position
+    console.log(navigator.position.z);
+    control.target = navigator.position
 }
 
 let addListener = () => {
